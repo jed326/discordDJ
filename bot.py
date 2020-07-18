@@ -1,14 +1,13 @@
 import asyncio
 import logging
+import os
 import random
 import sys
 from collections import deque
-import os
 
 import discord
-from discord.ext import commands
-
 import youtube_dl
+from discord.ext import commands
 
 # Set up Logging
 log = logging.getLogger()
@@ -64,9 +63,8 @@ class YTDLSource(discord.PCMVolumeTransformer):
 
 # Set up Bot
 token = remote = None
-description = '''An example bot to showcase the discord.ext.commands extension
-module.
-Who knows what the fuck this does'''
+description = '''Plays music in voice channels.
+Source: https://github.com/jed326/discordDJ'''
 prefix = "!kbot "
 
 if os.environ.get('TOKEN') != None:
@@ -190,6 +188,7 @@ class Music(commands.Cog):
         else:
             await ctx.send("There is no song currently playing.")
     
+    # TODO: volume is not very sensitive. Doesn't seem linear, could be using the API wrong.
     @commands.command()
     async def volume(self, ctx, volume: int):
         """Changes the player's volume"""
@@ -245,7 +244,7 @@ class Music(commands.Cog):
         else:
             desc = ""
             for item in list(self.queue):
-                desc += item[0] + "\n"
+                desc += "* " + item[0] + "\n"
             embed = discord.Embed(title="Play Queue", description=desc)
             await ctx.send(embed=embed)
     
