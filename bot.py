@@ -74,7 +74,7 @@ if os.environ.get('TOKEN') != None:
     token = os.environ.get('TOKEN')
 else:
     token = open("./auth.txt").read()
-    
+
 bot = commands.Bot(command_prefix=prefix, description=description)
 
 
@@ -158,8 +158,17 @@ class Music(commands.Cog):
     
     @commands.command()
     async def next(self, ctx):
-        """Skips to the next song. NYI"""
+        """Skips to the next song. NYI -- This is really hard to implement for some reason."""
         pass
+
+    @commands.command()
+    async def clear(self, ctx):
+        """Clears the play queue."""
+        log.info("Received command {} from {}".format(ctx.command, ctx.message.author))
+        self.queue = deque()
+
+        await ctx.send("Cleared the play queue")
+        await self.sendQueue(ctx)
 
     @commands.command()
     async def queue(self, ctx):
@@ -192,7 +201,6 @@ class Music(commands.Cog):
         ctx.voice_client.source.volume = volume / 100
         await ctx.send("Changed volume to {}%".format(volume))
 
-    # TODO: Add file cleanup
     @commands.command()
     async def stop(self, ctx):
         """Stops and disconnects the bot from voice"""
