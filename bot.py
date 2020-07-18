@@ -3,6 +3,7 @@ import logging
 import random
 import sys
 from collections import deque
+import os
 
 import discord
 from discord.ext import commands
@@ -67,8 +68,13 @@ description = '''An example bot to showcase the discord.ext.commands extension
 module.
 Who knows what the fuck this does'''
 prefix = "!kbot "
-token = open("./auth.txt").read()
 
+if os.environ.get('TOKEN') != None:
+    remote = True
+    token = os.environ.get('TOKEN')
+else:
+    token = open("./auth.txt").read()
+    
 bot = commands.Bot(command_prefix=prefix, description=description)
 
 
@@ -193,6 +199,11 @@ class Music(commands.Cog):
         log.info("Received command {} from {}".format(ctx.command, ctx.message.author))
 
         await ctx.voice_client.disconnect()
+
+        dir_name = "."
+        for item in os.listdir(dir_name):
+            if item.endswith(".webm"):
+                os.remove(os.path.join(dir_name, item))
     
     # TODO: it looks like this isn't doing anything
     @play.before_invoke
